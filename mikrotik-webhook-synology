@@ -1,4 +1,5 @@
 #Webhook to Synology Chat that router is rebooted
+# for use with Synology Chat
 # Variables
 :local ID ([/system identity get name])
 :local WEBHOOK "https://chat.example.com/webapi/entry.cgi?api=SYNO.Chat.External&method=incoming&version=2&token=%22ukkgqhpPavhCXevoxhIxwkeSzhLpXM493MhH6NKSZREOAc7deRhEq8qIz"
