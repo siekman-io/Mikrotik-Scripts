@@ -1,0 +1,39 @@
+# Update hostname in directadmin after ip change
+
+#/tool fetch url="http://myip.dnsomatic.com/" mode=http dst-path=publicip.txt
+/tool fetch url="http://icanhazip.com/" mode=http dst-path=publicip.txt
+
+
+:local ID ([/system identity get name])
+:local DAUSER "youradminuser"
+:local DAPASS "yoursupersecretadminpassword"
+:local DASRV "https://your-directadmin-server-address"
+:local DAPORT 2222
+:local DADOMAIN "example.com"
+:local DASUB "rt01"
+
+#A|NS|MX|CNAME|PTR
+:local TYPE A 
+:global NEWIP [file get publicip.txt contents]
+:global CURRENTIP [file get publicip1.txt contents]
+#RESET VALUE, TO BE CHANGED IN THE CHECK 1=CHANGED 0=UNCHANGED
+:global CHANGED 9
+
+:if ($NEWIP != $CURRENTIP) do={:set CHANGED 1} else={:set CHANGED 0}
+
+:if ($CHANGED = 1 )  do={
+log error message="CHANGE IS 1";
+log error message="log2";
+/tool fetch mode=https user=$DAUSER password=$DAPASS  url="$DASRV/CMD_API_DNS_CONTROL\?domain=$DADOMAIN&action=select&arecs0=name%3D$DASUB&value=$CURRENTIP" port=$DAPORT keep-result=no;
+:global CURRENTIP $NEWIP;
+/tool fetch mode=https user=$DAUSER password=$DAPASS  url="$DASRV/CMD_API_DNS_CONTROL\?domain=$DADOMAIN&action=add&type=$TYPE&name=$DASUB&value=$NEWIP" port=$DAPORT keep-result=no;
+}
+
+
+
+:if ($CHANGED = 0 )  do={
+log error message="Script heeft gedraaid";
+} 
+
+
+
