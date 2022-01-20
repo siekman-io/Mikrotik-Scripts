@@ -1,6 +1,6 @@
 # Domain to be added to your DHCP-clients hostname
 :local topdomain;
-:set topdomain "FILL YOUR TOPDOMAIN";
+:set topdomain "home.local";
 
 # Use ttl to distinguish dynamic added DNS records
 :local ttl;
